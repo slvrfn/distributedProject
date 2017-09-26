@@ -11,13 +11,13 @@ public class TCPServerRouter
 		Object [][] RoutingTable = new Object [10][2]; // routing table
 		int SockNum = 5555; // port number
 		Boolean Running = true;
-		int ind = 0; // indext in the routing table
+		int ind = 0; // index in the routing table
 		
 		//Accepting connections
 		ServerSocket serverSocket = null; // server socket for accepting connections
 		try
 		{
-			serverSocket = new ServerSocket(5555);
+			serverSocket = new ServerSocket(SockNum);
 			System.out.println("ServerRouter is Listening on port: 5555.");
 		}
 		catch (IOException e)
