@@ -2,24 +2,34 @@ package distributedServer;
 
 import java.io.*;
 import java.net.*;
+import java.util.Scanner;
 
 public class TCPServer 
 {
 	public static void main(String[] args) throws IOException 
 	{
+		Scanner s = new Scanner(System.in);
+		System.out.println("Is this client service running on the same machine as the ServerRouter? \'y\' or \'n\'");
+		String choice = s.next();
+		boolean RunningOnLocalMachine = choice.equals("y");
+
 		// Variables for setting up connection and communication
 		Socket Socket = null; // socket to connect with ServerRouter
 		PrintWriter out = null; // for writing to ServerRouter
 		BufferedReader in = null; // for reading form ServerRouter
-		InetAddress addr = InetAddress.getLocalHost();
-		String host = addr.getHostAddress(); // Server machine's IP			
-		String routerName = "10.100.67.147"; // ServerRouter host name
+		String routerName = "someRouterIP"; // ServerRouter host name
 		int SockNum = 5555; // port number
 		
 		// Tries to connect to the ServerRouter
 		try 
 		{
-			Socket = new Socket(routerName, SockNum);
+			if (RunningOnLocalMachine)
+			{
+				routerName = "127.0.0.1";
+				Socket = new Socket(routerName, SockNum, InetAddress.getByName(null),4321);
+			}
+			else
+				Socket = new Socket(routerName, SockNum);
 			out = new PrintWriter(Socket.getOutputStream(), true);
 			in = new BufferedReader(new InputStreamReader(Socket.getInputStream()));
 		}

@@ -17,13 +17,15 @@ public class SThread extends Thread
 	// Constructor
 	SThread(Object [][] Table, Socket toClient, int index) throws IOException
 	{
-			out = new PrintWriter(toClient.getOutputStream(), true);
-			in = new BufferedReader(new InputStreamReader(toClient.getInputStream()));
-			RTable = Table;
-			addr = toClient.getInetAddress().getHostAddress();
-			RTable[index][0] = addr; // IP addresses 
-			RTable[index][1] = toClient; // sockets for communication
-			ind = index;
+		out = new PrintWriter(toClient.getOutputStream(), true);
+		in = new BufferedReader(new InputStreamReader(toClient.getInputStream()));
+		RTable = Table;
+		addr = toClient.getInetAddress().getHostAddress();
+		addr += ":"+toClient.getPort();
+		System.out.println(addr+ " added to routing table");
+		RTable[index][0] = addr; // IP addresses
+		RTable[index][1] = toClient; // sockets for communication
+		ind = index;
 	}
 	
 	// Run method (will run for each machine that connects to the ServerRouter)
@@ -47,7 +49,7 @@ public class SThread extends Thread
 			}
 			
 			// loops through the routing table to find the destination
-			for ( int i=0; i<10; i++) 
+			for ( int i=0; i<RTable.length; i++)
 			{
 				if (destination.equals((String) RTable[i][0]))
 				{
