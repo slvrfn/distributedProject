@@ -12,7 +12,7 @@ public class LogWriter
     public LogWriter(String folderLocation)
     {
         //each test will save its output in a different folder based on the test start time
-        String folderName = String.valueOf(System.currentTimeMillis());
+        String folderName = "Test from "+String.valueOf(System.currentTimeMillis());
         folderLocation += "/" + folderName;
         saveDirectory = new File(folderLocation);
     }
@@ -20,10 +20,11 @@ public class LogWriter
     public void WriteToFile(String message)
     {
         BufferedWriter writer = null;
-        File file = new File(saveDirectory,".txt");
+        File file = new File(saveDirectory,"log "+ System.currentTimeMillis()+".txt");
         try
         {
             writer = new BufferedWriter(new FileWriter(file));
+            writer.write(message);
         }
         catch (IOException e)
         {
