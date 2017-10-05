@@ -5,17 +5,20 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
-//Generic base thread. This is used to perform the basic message wiring
+//Generic base test thread. This is used to perform the basic message wiring
 //while derived classes perform the actual tests
-public abstract class BaseTestThread extends Thread
+public abstract class BaseServerThread extends Thread
 {
 	boolean RunningOnLocalMachine;
+	String routerName; // ServerRouter host name
 
 	protected volatile Boolean isRunning = true;
 
-	BaseTestThread(boolean onLocalMachine) throws IOException
+	BaseServerThread(String _routerName, boolean onLocalMachine)
 	{
 		RunningOnLocalMachine = onLocalMachine;
+
+		routerName = _routerName;
 	}
 	
 	// Run method (will run for each machine that connects to the ServerRouter)
@@ -24,7 +27,6 @@ public abstract class BaseTestThread extends Thread
 		// Variables for setting up connection and communication
 		Socket socket = null; // socket to connect with ServerRouter
 
-		String routerName = "someRouterIP"; // ServerRouter host name
 		int SockNum = 5555; // port number
 
 		// Tries to connect to the ServerRouter
@@ -33,10 +35,6 @@ public abstract class BaseTestThread extends Thread
 			if (RunningOnLocalMachine)
 				routerName = "127.0.0.1";
 			socket = new Socket(routerName, SockNum, InetAddress.getByName(null), PortToRunOn());
-		}
-		catch (UnknownHostException e)
-		{
-			ERROR("Don't know about router: " + routerName);
 		}
 		catch (IOException e)
 		{
@@ -82,6 +80,6 @@ public abstract class BaseTestThread extends Thread
 	//allow children to modify output before it is printed
 	protected void PRINT(String message)
 	{
-		System.err.println(message);
+		System.out.println(message);
 	}
 }

@@ -7,11 +7,11 @@ import java.io.PrintWriter;
 import java.net.Socket;
 
 //class to run some network test
-public class TextThread extends BaseTestThread
+public class ServerTextThread extends BaseServerThread
 {
-    public TextThread(boolean onLocalMachine) throws IOException
+    public ServerTextThread(String routerName, boolean onLocalMachine)
     {
-        super(onLocalMachine);
+        super(routerName, onLocalMachine);
     }
 
     @Override
@@ -42,8 +42,6 @@ public class TextThread extends BaseTestThread
         // Variables for message passing
         String fromServer; // messages sent to ServerRouter
         String fromClient; // messages received from ServerRouter
-
-        // Communication process (initial sends/receives)
 
         try
         {
@@ -85,6 +83,6 @@ public class TextThread extends BaseTestThread
 
     @Override
     protected void PRINT(String message) {
-        super.PRINT("TextThread " + message);
+        super.PRINT("ServerTextThread " + message);
     }
 }

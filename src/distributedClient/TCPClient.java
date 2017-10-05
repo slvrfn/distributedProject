@@ -1,10 +1,11 @@
 package distributedClient;
 
-import java.io.*;
-import java.net.*;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
-public class TCPClient 
+public class TCPClient
 {
 	public static void main(String[] args) throws IOException 
 	{
@@ -13,84 +14,55 @@ public class TCPClient
 		String choice = s.next();
 		boolean RunningOnLocalMachine = choice.equals("y");
 
-		// Variables for setting up connection and communication
-		Socket Socket = null; // socket to connect with ServerRouter
-		PrintWriter out = null; // for writing to ServerRouter
-		BufferedReader in = null; // for reading form ServerRouter
-		InetAddress addr = InetAddress.getLocalHost();
-		String host = addr.getHostAddress(); // Client machine's IP
-		int SockNum = 5555; // port number
-		String routerName = "someRouterIP"; // ServerRouter host name
-		String destinationIpAddress ="someDestinationIP"; // destination IP (Server)
+		List<BaseClientThread> currentThreads = new ArrayList<BaseClientThread>();
 
-
-		
-		// Tries to connect to the ServerRouter
-		try
+		while (!choice.equals("-1"))
 		{
-			if (RunningOnLocalMachine)
+			PrintChoices();
+			choice = s.next();
+
+			BaseClientThread test;
+			switch (choice)
 			{
-				routerName = "127.0.0.1";
-				destinationIpAddress ="127.0.0.1:4321";
-				Socket = new Socket(routerName, SockNum, InetAddress.getByName(null),1234);
+				case "1":
+					test = new ClientTextThread("someRouterIP","someDestinationIp", RunningOnLocalMachine);
+					choice = "ServerTextThread";
+					break;
+				default:
+					PRINT("Invalid Input");
+					//loop starts over instead of continuing
+					continue;
 			}
-			else
-				Socket = new Socket(routerName, SockNum);
-			out = new PrintWriter(Socket.getOutputStream(), true);
-			in = new BufferedReader(new InputStreamReader(Socket.getInputStream()));
-		}
-		catch (UnknownHostException e) 
-		{
-		   System.err.println("C Don't know about router: " + routerName);
-		   System.exit(1);
-		}
-		catch (IOException e) 
-		{
-			System.err.println("Couldn't get I/O for the connection to: " + routerName);
-			System.exit(1);
-		}
-		
-		// Variables for message passing
-		Reader reader = new FileReader("src/file.txt"); 
-		BufferedReader fromFile =  new BufferedReader(reader); // reader for the string file
-		String fromServer; // messages received from ServerRouter
-		String fromUser; // messages sent to ServerRouter
-		long t0, t1, t;
-		
-		// Communication process (initial sends/receives
-		out.println(destinationIpAddress);// initial send (IP of the destination Server)
-		fromServer = in.readLine();//initial receive from router (verification of connection)
-		System.out.println("ServerRouter: " + fromServer);
 
-		if (RunningOnLocalMachine)
-			out.println("127.0.0.1:1234"); // Client sends local IP with desired port as initial send
-		else
-			out.println(host); // Client sends the IP of its machine as initial send
+			currentThreads.add(test);
+			test.start();
 
-		t0 = System.currentTimeMillis();
-	
-		// Communication while loop
-		while ((fromServer = in.readLine()) != null) 
+			PRINT(choice + " Thread Started!\n");
+		}
+
+		//stop any current threads if they are running
+		for (BaseClientThread test: currentThreads)
 		{
-			System.out.println("Server: " + fromServer);
-			t1 = System.currentTimeMillis();
-			if (fromServer.equals("Bye.")) // exit statement
-				break;
-			t = t1 - t0;
-			System.out.println("Cycle time: " + t);
-			
-			fromUser = fromFile.readLine(); // reading strings from a file
-			if (fromUser != null) 
+			if (test.isAlive())
 			{
-				System.out.println("Client: " + fromUser);
-				out.println(fromUser); // sending the strings to the Server via ServerRouter
-				t0 = System.currentTimeMillis();
+				test.TerminateThread();
 			}
 		}
-		
-		// closing connections
-		out.close();
-		in.close();
-		Socket.close();
+
+		PRINT("Server Closing");
+
+	}
+
+	private static void PrintChoices()
+	{
+		PRINT("What Type of Test Would you like to run?");
+		PRINT("Enter number before test");
+		PRINT("Enter \'-1\' to exit");
+		PRINT("1) Text Stream Test");
+	}
+
+	private static void PRINT(String message)
+	{
+		System.out.println(message);
 	}
 }

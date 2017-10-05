@@ -9,27 +9,27 @@ import java.util.Scanner;
 
 public class TCPServer 
 {
-	public static void main(String[] args) throws IOException 
+	public static void main(String[] args)
 	{
 		Scanner s = new Scanner(System.in);
 		PRINT("Is this client service running on the same machine as the ServerRouter? \'y\' or \'n\'. Or \'-1\' to exit");
 		String choice = s.next();
 		boolean RunningOnLocalMachine = choice.equals("y");
 
-		List<BaseTestThread> currentThreads = new ArrayList<BaseTestThread>();
+		List<BaseServerThread> currentThreads = new ArrayList<BaseServerThread>();
 
 		while (!choice.equals("-1"))
 		{
 			PrintChoices();
 			choice = s.next();
 
-			BaseTestThread test;
+			BaseServerThread test;
 			switch (choice)
 			{
 				case "1":
 
-					test = new TextThread(RunningOnLocalMachine);
-					choice = "TextThread";
+					test = new ServerTextThread("someRouterIP", RunningOnLocalMachine);
+					choice = "ServerTextThread";
 					break;
 				default:
 					PRINT("Invalid Input");
@@ -40,11 +40,11 @@ public class TCPServer
 			currentThreads.add(test);
 			test.start();
 
-			PRINT(choice + " Thread Started!");
+			PRINT(choice + " Thread Started!\n");
 		}
 
 		//stop any current threads if they are running
-		for (BaseTestThread test: currentThreads)
+		for (BaseServerThread test: currentThreads)
 		{
 			if (test.isAlive())
 			{
