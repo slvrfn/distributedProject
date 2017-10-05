@@ -56,6 +56,7 @@ public class SThread extends Thread
 					outSocket = (Socket) RTable[i][1]; // gets the socket for communication from the table
 					System.out.println("Found destination: " + destination);
 					outTo = new PrintWriter(outSocket.getOutputStream(), true); // assigns a writer
+					break;
 				}
 			}
 			

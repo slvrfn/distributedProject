@@ -50,7 +50,6 @@ public class TCPClient
 		}
 
 		PRINT("Server Closing");
-
 	}
 
 	private static void PrintChoices()
