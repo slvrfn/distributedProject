@@ -1,5 +1,7 @@
 package distributedServerRouter;
 
+import logWriter.LogWriter;
+
 import java.io.*;
 import java.net.*;
 import java.lang.Exception;
@@ -14,8 +16,10 @@ public class SThread extends Thread
 	private Socket outSocket; // socket for communicating with a destination
 	private int ind; // indext in the routing table
 
+	LogWriter logWriter;
+
 	// Constructor
-	SThread(Object [][] Table, Socket toClient, int index) throws IOException
+	SThread(Object [][] Table, Socket toClient, int index, LogWriter writer) throws IOException
 	{
 		out = new PrintWriter(toClient.getOutputStream(), true);
 		in = new BufferedReader(new InputStreamReader(toClient.getInputStream()));
@@ -26,6 +30,7 @@ public class SThread extends Thread
 		RTable[index][0] = addr; // IP addresses
 		RTable[index][1] = toClient; // sockets for communication
 		ind = index;
+		logWriter = writer;
 	}
 	
 	// Run method (will run for each machine that connects to the ServerRouter)
@@ -47,7 +52,12 @@ public class SThread extends Thread
 			{
 				System.out.println("Thread interrupted");
 			}
-			
+
+			long startTime, endTime, lookupTime;
+			startTime = System.currentTimeMillis();
+			//should always get a value set
+			endTime = 0;
+
 			// loops through the routing table to find the destination
 			for ( int i=0; i<RTable.length; i++)
 			{
@@ -56,10 +66,14 @@ public class SThread extends Thread
 					outSocket = (Socket) RTable[i][1]; // gets the socket for communication from the table
 					System.out.println("Found destination: " + destination);
 					outTo = new PrintWriter(outSocket.getOutputStream(), true); // assigns a writer
+					endTime = System.currentTimeMillis();
 					break;
 				}
 			}
-			
+			lookupTime = startTime-endTime;
+			String toWrite = String.format("Lookup Time: %s Items in Routing Table: %s", lookupTime, RTable.length);
+			logWriter.WriteToFile(toWrite);
+
 			// Communication loop
 			while ((inputLine = in.readLine()) != null) 
 			{

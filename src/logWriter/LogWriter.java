@@ -15,6 +15,8 @@ public class LogWriter
         String folderName = "Test from "+String.valueOf(System.currentTimeMillis());
         folderLocation += "/" + folderName;
         saveDirectory = new File(folderLocation);
+        if (!saveDirectory.exists())
+            saveDirectory.mkdir();
     }
 
     public void WriteToFile(String message)
@@ -28,6 +30,7 @@ public class LogWriter
         }
         catch (IOException e)
         {
+            e.printStackTrace();
             ERROR("Could not create file");
         }
         finally

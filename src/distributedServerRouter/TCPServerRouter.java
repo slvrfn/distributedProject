@@ -1,5 +1,7 @@
 package distributedServerRouter;
 
+import logWriter.LogWriter;
+
 import java.net.*;
 import java.io.*;
 
@@ -12,6 +14,8 @@ public class TCPServerRouter
 		int SockNum = 5555; // port number
 		Boolean Running = true;
 		int ind = 0; // index in the routing table
+
+		String logFolderSaveLocation = "src/distributedServerRouter";
 		
 		//Accepting connections
 		ServerSocket serverSocket = null; // server socket for accepting connections
@@ -32,7 +36,7 @@ public class TCPServerRouter
 			try
 			{
 				clientSocket = serverSocket.accept();
-				SThread t = new SThread(RoutingTable, clientSocket, ind); // creates a thread with a random port
+				SThread t = new SThread(RoutingTable, clientSocket, ind, new LogWriter(logFolderSaveLocation)); // creates a thread with a random port
 				t.start(); // starts the thread
 				ind++; // increments the index
 				System.out.println("ServerRouter connected with Client/Server: " + clientSocket.getInetAddress().getHostAddress());
