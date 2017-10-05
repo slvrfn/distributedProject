@@ -14,14 +14,18 @@ public class TextThread extends BaseTestThread
         super(onLocalMachine);
     }
 
+    @Override
+    protected int PortToRunOn() {
+        return 4321;
+    }
+
     //the test to be performed
     //you are provided a socket, you can perform whatever options over it
     //clean up writers/readers you create
     //DO NOT clean up socket provided
     @Override
-    protected void RunTest(Socket socket) {
-
-
+    protected void RunTest(Socket socket)
+    {
         PrintWriter out = null; // for writing to ServerRouter
         BufferedReader in = null; // for reading form ServerRouter
 
@@ -32,7 +36,7 @@ public class TextThread extends BaseTestThread
         }
         catch (IOException e)
         {
-            this.ERROR("Couldn't get I/O for the connection to: ");
+            ERROR("Couldn't get I/O for the connection to: ");
         }
 
         // Variables for message passing
@@ -45,16 +49,17 @@ public class TextThread extends BaseTestThread
         {
             fromClient = in.readLine();// initial receive from router (verification of connection)
             out.println(fromClient);// initial send (IP of the destination Client)
-            System.out.println("ServerRouter: " + fromClient);
+            PRINT("ServerRouter: " + fromClient);
 
             // Communication while loop
-            while ((fromClient = in.readLine()) != null)
+            //loop will stop if the thread needs to be closed, or if client has stopped sending things
+            while (isRunning && (fromClient = in.readLine()) != null)
             {
-                System.out.println("Client said: " + fromClient);
+                PRINT("Client said: " + fromClient);
                 if (fromClient.equals("Bye.")) // exit statement
                     break;
                 fromServer = fromClient.toUpperCase(); // converting received message to upper case
-                System.out.println("Server said: " + fromServer);
+                PRINT("Server said: " + fromServer);
                 out.println(fromServer); // sending the converted message back to the Client via ServerRouter
             }
         }
@@ -74,10 +79,12 @@ public class TextThread extends BaseTestThread
         {
             ERROR("Error when closing socket");
         }
+
+        PRINT("Thread Closed");
     }
 
     @Override
-    protected void ERROR(String message) {
-        super.ERROR("TextThread " + message);
+    protected void PRINT(String message) {
+        super.PRINT("TextThread " + message);
     }
 }

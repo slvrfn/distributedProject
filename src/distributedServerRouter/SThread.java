@@ -77,6 +77,6 @@ public class SThread extends Thread
 		{
 			System.err.println("Could not listen to socket.");
 			System.exit(1);
-         }
+		}
 	}
 }

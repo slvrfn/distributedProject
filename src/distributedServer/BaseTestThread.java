@@ -11,6 +11,8 @@ public abstract class BaseTestThread extends Thread
 {
 	boolean RunningOnLocalMachine;
 
+	protected volatile Boolean isRunning = true;
+
 	BaseTestThread(boolean onLocalMachine) throws IOException
 	{
 		RunningOnLocalMachine = onLocalMachine;
@@ -29,12 +31,8 @@ public abstract class BaseTestThread extends Thread
 		try
 		{
 			if (RunningOnLocalMachine)
-			{
 				routerName = "127.0.0.1";
-				socket = new Socket(routerName, SockNum, InetAddress.getByName(null),4321);
-			}
-			else
-				socket = new Socket(routerName, SockNum);
+			socket = new Socket(routerName, SockNum, InetAddress.getByName(null), PortToRunOn());
 		}
 		catch (UnknownHostException e)
 		{
@@ -59,12 +57,31 @@ public abstract class BaseTestThread extends Thread
 		}
 	}
 
+	//the test to be performed
+	//you are provided a socket, you can perform whatever options over it
+	//clean up writers/readers you create
+	//DO NOT clean up socket provided
 	abstract protected void RunTest(Socket s);
+
+	//necessary so each test can specify which port it wants to run on
+	abstract protected int PortToRunOn();
+
+	public void TerminateThread()
+	{
+		isRunning = false;
+	}
 
 	//method to help identify which thread has an error
 	protected void ERROR(String message)
 	{
-		System.err.println(message);
+		//allow children to modify output
+		PRINT(message);
 		System.exit(1);
+	}
+
+	//allow children to modify output before it is printed
+	protected void PRINT(String message)
+	{
+		System.err.println(message);
 	}
 }
