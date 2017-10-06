@@ -65,7 +65,7 @@ public abstract class ServerRouterBaseThread extends Thread
 			}
 
 			long startTime, endTime, lookupTime;
-			startTime = System.currentTimeMillis();
+			startTime = System.nanoTime();
 			//should always get a value set
 			endTime = 0;
 
@@ -76,12 +76,24 @@ public abstract class ServerRouterBaseThread extends Thread
 				{
 					outSocket = (Socket) RTable[i][1]; // gets the socket for communication from the table
 					PRINT("Found destination: " + destination);
-					endTime = System.currentTimeMillis();
+					endTime = System.nanoTime();
 					break;
 				}
 			}
-			lookupTime = startTime-endTime;
-			String toWrite = String.format("Lookup Time: %s Items in Routing Table: %s", lookupTime, RTable.length);
+			lookupTime = endTime-startTime;
+
+			int itemsInRoutingTable = 0;
+
+			for (int i = 0; i<RTable.length; i++)
+			{
+				if (RTable[i][0] != null)
+					itemsInRoutingTable++;
+				else
+					//if null was reached the items that matter have already been counted
+					break;
+			}
+
+			String toWrite = String.format("Lookup Time: %s nanoseconds Items in Routing Table: %s", lookupTime, itemsInRoutingTable);
 			logWriter.WriteToFile(toWrite);
 
 			RunTest(toClient, outSocket);

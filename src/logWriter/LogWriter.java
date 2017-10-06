@@ -9,18 +9,19 @@ public class LogWriter
 {
     File saveDirectory;
 
-    public LogWriter(String folderLocation)
+    public LogWriter(String folderLocation, String testType)
     {
         //each test will save its output in a different folder based on the test start time
-        String folderName = "Test from "+String.valueOf(System.currentTimeMillis());
+        String folderName = testType + " test from "+String.valueOf(System.currentTimeMillis());
         folderLocation += "/" + folderName;
         saveDirectory = new File(folderLocation);
-        if (!saveDirectory.exists())
-            saveDirectory.mkdir();
     }
 
     public void WriteToFile(String message)
     {
+        if (!saveDirectory.exists())
+            saveDirectory.mkdir();
+
         BufferedWriter writer = null;
         File file = new File(saveDirectory,"log "+ System.currentTimeMillis()+".txt");
         try
