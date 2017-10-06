@@ -8,9 +8,8 @@ import java.net.Socket;
 //class to run some network test
 public class ClientTextThread extends BaseClientThread
 {
-    public ClientTextThread(String _routerName, String destinationIp, boolean onLocalMachine) throws IOException
-    {
-        super(_routerName, destinationIp, onLocalMachine);
+    public ClientTextThread(String _routerName, String destinationIp, boolean onLocalMachine, String choice) throws IOException {
+        super(_routerName, destinationIp, onLocalMachine, choice);
     }
 
     @Override
@@ -29,7 +28,7 @@ public class ClientTextThread extends BaseClientThread
         PrintWriter out = null; // for writing to ServerRouter
         BufferedReader in = null; // for reading form ServerRouter
         String fromUser;
-        long t0, t1, t;
+        long startTime, currentTime, timeDifference;
 
         // Variables for message passing
         Reader reader = null;
@@ -56,24 +55,24 @@ public class ClientTextThread extends BaseClientThread
 
         try
         {
-            t0 = System.currentTimeMillis();
+            startTime = System.currentTimeMillis();
 
             // Communication while loop
             while (isRunning && (fromServer = in.readLine()) != null)
             {
                 PRINT("Server: " + fromServer);
-                t1 = System.currentTimeMillis();
+                currentTime = System.currentTimeMillis();
                 if (fromServer.equals("Bye.")) // exit statement
                     break;
-                t = t1 - t0;
-                PRINT("Cycle time: " + t);
+                timeDifference = currentTime - startTime;
+                PRINT("Cycle time: " + timeDifference);
 
                 fromUser = fromFile.readLine(); // reading strings from a file
                 if (fromUser != null)
                 {
                     PRINT("Client: " + fromUser);
                     out.println(fromUser); // sending the strings to the Server via ServerRouter
-                    t0 = System.currentTimeMillis();
+                    startTime = System.currentTimeMillis();
                 }
             }
         }
@@ -93,8 +92,6 @@ public class ClientTextThread extends BaseClientThread
         {
             ERROR("Error when closing socket");
         }
-
-        PRINT("Thread Closed");
     }
 
     @Override

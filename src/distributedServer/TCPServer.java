@@ -28,7 +28,7 @@ public class TCPServer
 			{
 				case "1":
 
-					test = new ServerTextThread("someRouterIP", RunningOnLocalMachine);
+					test = new ServerTextThread("someRouterIP", RunningOnLocalMachine, choice);
 					choice = "ServerTextThread";
 					break;
 				default:

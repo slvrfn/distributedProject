@@ -12,14 +12,16 @@ public abstract class BaseClientThread extends Thread
     boolean RunningOnLocalMachine;
     String routerName; // ServerRouter host name
     String destinationIpAddress; // destination IP (Server)
+    String testChoice;
 
     protected volatile Boolean isRunning = true;
 
-    BaseClientThread(String _routerName, String destinationIp, boolean onLocalMachine) throws IOException
+    BaseClientThread(String _routerName, String destinationIp, boolean onLocalMachine, String choice) throws IOException
     {
         RunningOnLocalMachine = onLocalMachine;
         routerName = _routerName;
         destinationIpAddress = destinationIp;
+        testChoice = choice;
     }
 
     // Run method (will run for each machine that connects to the ServerRouter)
@@ -63,7 +65,9 @@ public abstract class BaseClientThread extends Thread
         String fromServer; // messages received from ServerRouter
 
         // Communication process (initial sends/receives
-        out.println(destinationIpAddress);// initial send (IP of the destination Server)
+        out.println(testChoice); //initial send test choice selection (MUST)
+        PRINT("Test choice \'" + testChoice + "\' was sent to the server router");
+        out.println(destinationIpAddress);//  send (IP of the destination Server)
         try
         {
             fromServer = in.readLine();//initial receive from router (verification of connection)
@@ -92,6 +96,7 @@ public abstract class BaseClientThread extends Thread
         {
             ERROR("Error when closing socket");
         }
+        PRINT("Thread Closed");
     }
 
     //the test to be performed

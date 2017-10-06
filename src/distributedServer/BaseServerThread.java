@@ -1,6 +1,9 @@
 package distributedServer;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
@@ -11,13 +14,16 @@ public abstract class BaseServerThread extends Thread
 {
 	boolean RunningOnLocalMachine;
 	String routerName; // ServerRouter host name
+	String testChoice;
+	PrintWriter out;
+	BufferedReader in;
 
 	protected volatile Boolean isRunning = true;
 
-	BaseServerThread(String _routerName, boolean onLocalMachine)
+	BaseServerThread(String _routerName, boolean onLocalMachine, String choice)
 	{
 		RunningOnLocalMachine = onLocalMachine;
-
+		testChoice = choice;
 		routerName = _routerName;
 	}
 	
@@ -41,18 +47,36 @@ public abstract class BaseServerThread extends Thread
 			ERROR("Couldn't get I/O for the connection to: " + routerName);
 		}
 
+		try
+		{
+			out = new PrintWriter(socket.getOutputStream(), true);
+			in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+			out.println(testChoice); //initial send test choice (MUST)
+			PRINT("Test choice \'" + testChoice + "\' was sent to the server router");
+			String fromClient = in.readLine();// initial receive from router (verification of connection)
+			out.println(fromClient);// initial send (IP of the destination Client)
+			PRINT("ServerRouter: " + fromClient);
+		}
+		catch (IOException e)
+		{
+			ERROR("Couldn't get I/O for the connection");
+		}
+
 		//since connection now set up, actually run test
 		RunTest(socket);
 
 		//clean up socket
 		try
 		{
+			in.close();
+			out.close();
 			socket.close();
 		}
 		catch (IOException e)
 		{
 			ERROR("Error when closing socket");
 		}
+		PRINT("Thread Closed");
 	}
 
 	//the test to be performed

@@ -9,9 +9,8 @@ import java.net.Socket;
 //class to run some network test
 public class ServerTextThread extends BaseServerThread
 {
-    public ServerTextThread(String routerName, boolean onLocalMachine)
-    {
-        super(routerName, onLocalMachine);
+    public ServerTextThread(String _routerName, boolean onLocalMachine, String choice) {
+        super(_routerName, onLocalMachine, choice);
     }
 
     @Override
@@ -36,7 +35,7 @@ public class ServerTextThread extends BaseServerThread
         }
         catch (IOException e)
         {
-            ERROR("Couldn't get I/O for the connection to: ");
+            ERROR("Couldn't get I/O for the connection");
         }
 
         // Variables for message passing
@@ -45,10 +44,6 @@ public class ServerTextThread extends BaseServerThread
 
         try
         {
-            fromClient = in.readLine();// initial receive from router (verification of connection)
-            out.println(fromClient);// initial send (IP of the destination Client)
-            PRINT("ServerRouter: " + fromClient);
-
             // Communication while loop
             //loop will stop if the thread needs to be closed, or if client has stopped sending things
             while (isRunning && (fromClient = in.readLine()) != null)
@@ -77,8 +72,6 @@ public class ServerTextThread extends BaseServerThread
         {
             ERROR("Error when closing socket");
         }
-
-        PRINT("Thread Closed");
     }
 
     @Override

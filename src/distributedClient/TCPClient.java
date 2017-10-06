@@ -25,7 +25,7 @@ public class TCPClient
 			switch (choice)
 			{
 				case "1":
-					test = new ClientTextThread("someRouterIP","someDestinationIp", RunningOnLocalMachine);
+					test = new ClientTextThread("someRouterIP","someDestinationIp", RunningOnLocalMachine, choice);
 					choice = "ServerTextThread";
 					break;
 				default:

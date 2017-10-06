@@ -4,11 +4,18 @@ import logWriter.LogWriter;
 
 import java.net.*;
 import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
 
 public class TCPServerRouter 
 {
-	public static void main(String[] args) throws IOException
+	public static void main(String[] args)
 	{
+		List<ServerRouterBaseThread> currentThreads = new ArrayList<>();
+		List<Socket> openSockets = new ArrayList<>();
+		BufferedReader in; // reader (for reading from the machine connected to)
+
 		Socket clientSocket = null; // socket for the thread
 		Object [][] RoutingTable = new Object [30][2]; // routing table
 		int SockNum = 5555; // port number
@@ -22,12 +29,11 @@ public class TCPServerRouter
 		try
 		{
 			serverSocket = new ServerSocket(SockNum);
-			System.out.println("ServerRouter is Listening on port: " + SockNum);
+			PRINT("ServerRouter is Listening on port: " + SockNum);
 		}
 		catch (IOException e)
 		{
-			System.err.println("Could not listen on port: " + SockNum);
-			System.exit(1);
+			ERROR("Could not listen on port: " + SockNum);
 		}
 		
 		// Creating threads with accepted connections
@@ -36,20 +42,75 @@ public class TCPServerRouter
 			try
 			{
 				clientSocket = serverSocket.accept();
-				SThread t = new SThread(RoutingTable, clientSocket, ind, new LogWriter(logFolderSaveLocation)); // creates a thread with a random port
+				openSockets.add(clientSocket);
+
+				ServerRouterBaseThread t = null; // creates a thread with a specified port
+				in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+				String testChoice = in.readLine();
+				PRINT("Test choice \'" + testChoice + "\' was received");
+				switch (testChoice)
+				{
+					case "1":
+						t = new ServerRouterTextThread(RoutingTable, clientSocket, ind, new LogWriter(logFolderSaveLocation));
+						break;
+					default:
+						ERROR("Test not available");
+						break;
+				}
+				currentThreads.add(t);
 				t.start(); // starts the thread
+				PRINT("ServerRouter Text test thread started");
+
 				ind++; // increments the index
-				System.out.println("ServerRouter connected with Client/Server: " + clientSocket.getInetAddress().getHostAddress());
+				PRINT("ServerRouter connected with Client/Server: " + clientSocket.getInetAddress().getHostAddress());
 			}
 			catch (IOException e) 
 			{
-				System.err.println("Client/Server failed to connect.");
-				System.exit(1);
+				ERROR("Client/Server failed to connect.");
 			}
 		}//end while
-		
-		//closing connections
-		clientSocket.close();
-		serverSocket.close();
+
+		//stop any current threads if they are running
+		for (ServerRouterBaseThread test: currentThreads)
+		{
+			if (test.isAlive())
+			{
+				test.TerminateThread();
+			}
+		}
+
+		try
+		{
+			//closing connections
+			for (Socket sock: openSockets)
+			{
+				try
+				{
+					//closing sockets
+					sock.close();
+				}
+				catch (IOException e)
+				{
+					PRINT("Error closing opened socket");
+				}
+			}
+			serverSocket.close();
+		}
+		catch (IOException e)
+		{
+			PRINT("Error closing server socket");
+		}
+	}
+
+	private static void PRINT(String message)
+	{
+		System.out.println(message);
+	}
+
+	private static void ERROR(String message)
+	{
+		//allow children to modify output
+		PRINT(message);
+		System.exit(1);
 	}
 }
