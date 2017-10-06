@@ -41,7 +41,6 @@ public class ServerRouterTextThread extends ServerRouterBaseThread
                 if (inputLine.equals("Bye.")) // exit statement
                     break;
                 outputLine = inputLine; // passes the input from the machine to the output string for the destination
-
                 if ( outSocket != null)
                 {
                     outTo.println(outputLine); // writes to the destination

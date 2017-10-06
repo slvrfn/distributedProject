@@ -7,9 +7,9 @@ import java.io.PrintWriter;
 import java.net.Socket;
 
 //class to run some network test
-public class ServerTextThread extends BaseServerThread
+public class ServerTwoWayTextThread extends BaseServerThread
 {
-    public ServerTextThread(String _routerName, boolean onLocalMachine, String choice) {
+    public ServerTwoWayTextThread(String _routerName, boolean onLocalMachine, String choice) {
         super(_routerName, onLocalMachine, choice);
     }
 
@@ -39,7 +39,7 @@ public class ServerTextThread extends BaseServerThread
         }
 
         // Variables for message passing
-        String fromServer; // messages sent to ServerRouter
+        String fromServer = ""; // messages sent to ServerRouter
         String fromClient; // messages received from ServerRouter
 
         try
@@ -50,11 +50,22 @@ public class ServerTextThread extends BaseServerThread
             {
                 PRINT("Client said: " + fromClient);
                 if (fromClient.equals("Bye.")) // exit statement
+                {
                     break;
-                fromServer = fromClient.toUpperCase(); // converting received message to upper case
+                }
+                if (fromClient.equals("Finished.")) // exit statement
+                {
+                    String finishTime = String.valueOf(System.currentTimeMillis());
+                    PRINT("Test finished at: " + finishTime);
+                    out.println(finishTime);
+                    break;
+                }
                 PRINT("Server said: " + fromServer);
                 out.println(fromServer); // sending the converted message back to the Client via ServerRouter
             }
+
+
+
         }
         catch (IOException e)
         {
@@ -76,6 +87,6 @@ public class ServerTextThread extends BaseServerThread
 
     @Override
     protected void PRINT(String message) {
-        super.PRINT("ServerTextThread " + message);
+        super.PRINT("ServerTwoWayTextThread " + message);
     }
 }

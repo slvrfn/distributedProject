@@ -44,6 +44,7 @@ public abstract class BaseServerThread extends Thread
 		}
 		catch (IOException e)
 		{
+			e.printStackTrace();
 			ERROR("Couldn't get I/O for the connection to: " + routerName);
 		}
 

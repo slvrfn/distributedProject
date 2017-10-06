@@ -1,5 +1,7 @@
 package distributedClient;
 
+import logWriter.LogWriter;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,6 +18,9 @@ public class TCPClient
 
 		List<BaseClientThread> currentThreads = new ArrayList<BaseClientThread>();
 
+		String logFolderSaveLocation = "src/distributedClient";
+		LogWriter twoWayTextLogWriter = new LogWriter(logFolderSaveLocation, "TwoWayText");
+
 		while (!choice.equals("-1"))
 		{
 			PrintChoices();
@@ -25,8 +30,8 @@ public class TCPClient
 			switch (choice)
 			{
 				case "1":
-					test = new ClientTextThread("someRouterIP","someDestinationIp", RunningOnLocalMachine, choice);
-					choice = "ServerTextThread";
+					test = new ClientTwoWayTextThread("someRouterIP","someDestinationIp", RunningOnLocalMachine, choice, twoWayTextLogWriter);
+					choice = "ServerTwoWayTextThread";
 					break;
 				default:
 					PRINT("Invalid Input");

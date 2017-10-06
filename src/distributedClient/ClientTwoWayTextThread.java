@@ -1,15 +1,18 @@
 package distributedClient;
 
-import distributedServer.BaseServerThread;
+import logWriter.LogWriter;
 
 import java.io.*;
 import java.net.Socket;
 
 //class to run some network test
-public class ClientTextThread extends BaseClientThread
+public class ClientTwoWayTextThread extends BaseClientThread
 {
-    public ClientTextThread(String _routerName, String destinationIp, boolean onLocalMachine, String choice) throws IOException {
+    LogWriter twoWayTextLogWriter;
+
+    public ClientTwoWayTextThread(String _routerName, String destinationIp, boolean onLocalMachine, String choice, LogWriter writer) throws IOException {
         super(_routerName, destinationIp, onLocalMachine, choice);
+        twoWayTextLogWriter = writer;
     }
 
     @Override
@@ -28,7 +31,7 @@ public class ClientTextThread extends BaseClientThread
         PrintWriter out = null; // for writing to ServerRouter
         BufferedReader in = null; // for reading form ServerRouter
         String fromUser;
-        long startTime, currentTime, timeDifference;
+        long startTime, timeDifference;
 
         // Variables for message passing
         Reader reader = null;
@@ -41,7 +44,7 @@ public class ClientTextThread extends BaseClientThread
             ERROR("Could Not find file to send");
         }
         BufferedReader fromFile =  new BufferedReader(reader); // reader for the string file
-        String fromServer; // messages received from ServerRouter
+        String fromServer = ""; // messages received from ServerRouter
 
         try
         {
@@ -56,25 +59,32 @@ public class ClientTextThread extends BaseClientThread
         try
         {
             startTime = System.currentTimeMillis();
-
+            String timeFinished = "-1";
+            boolean saveTime = false;
             // Communication while loop
             while (isRunning && (fromServer = in.readLine()) != null)
             {
                 PRINT("Server: " + fromServer);
-                currentTime = System.currentTimeMillis();
+                if (saveTime)
+                    timeFinished = fromServer;
                 if (fromServer.equals("Bye.")) // exit statement
                     break;
-                timeDifference = currentTime - startTime;
-                PRINT("Cycle time: " + timeDifference);
 
                 fromUser = fromFile.readLine(); // reading strings from a file
                 if (fromUser != null)
                 {
                     PRINT("Client: " + fromUser);
                     out.println(fromUser); // sending the strings to the Server via ServerRouter
-                    startTime = System.currentTimeMillis();
                 }
+                if (fromUser.equals("Finished."))
+                    saveTime = true;
+                else
+                    saveTime = false;
             }
+            PRINT("Time received: " + timeFinished);
+            long diff = Long.parseLong(timeFinished)-startTime;
+            String output = String.format("Two Way text Transmission occurred in %s milliseconds", diff);
+            twoWayTextLogWriter.WriteToFile(output);
         }
         catch (IOException e)
         {
@@ -98,7 +108,7 @@ public class ClientTextThread extends BaseClientThread
     protected void PRINT(String message)
     {
 
-        super.PRINT("ClientTextThread " + message);
+        super.PRINT("ClientTwoWayTextThread " + message);
     }
 }
 

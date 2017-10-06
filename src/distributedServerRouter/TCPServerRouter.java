@@ -23,7 +23,7 @@ public class TCPServerRouter
 		int ind = 0; // index in the routing table
 
 		String logFolderSaveLocation = "src/distributedServerRouter";
-		LogWriter textTestLogWriter = new LogWriter(logFolderSaveLocation, "TextTest");
+		LogWriter routingTableLookupLogWriter = new LogWriter(logFolderSaveLocation, "RoutingTableLookup");
 		
 		//Accepting connections
 		ServerSocket serverSocket = null; // server socket for accepting connections
@@ -52,7 +52,7 @@ public class TCPServerRouter
 				switch (testChoice)
 				{
 					case "1":
-						t = new ServerRouterTextThread(RoutingTable, clientSocket, ind, textTestLogWriter);
+						t = new ServerRouterTextThread(RoutingTable, clientSocket, ind, routingTableLookupLogWriter);
 						break;
 					default:
 						ERROR("Test not available");

@@ -31,7 +31,6 @@ public class LogWriter
         }
         catch (IOException e)
         {
-            e.printStackTrace();
             ERROR("Could not create file");
         }
         finally
