@@ -21,6 +21,7 @@ public class TCPClient
 		String logFolderSaveLocation = "src/distributedClient";
 		LogWriter twoWayTextLogWriter = new LogWriter(logFolderSaveLocation, "TwoWayText");
 		LogWriter oneWayTextLogWriter = new LogWriter(logFolderSaveLocation, "OneWayText");
+		LogWriter messageSizeTextLogWriter = new LogWriter(logFolderSaveLocation, "MessageSizeText");
 
 		while (!choice.equals("-1"))
 		{
@@ -32,11 +33,15 @@ public class TCPClient
 			{
 				case "1":
 					test = new ClientTwoWayTextThread("someRouterIP","someDestinationIp", RunningOnLocalMachine, choice, twoWayTextLogWriter);
-					choice = "ServerTwoWayTextThread";
+					choice = "ClientTwoWayTextThread";
 					break;
 				case "2":
 					test = new ClientOneWayTextThread("someRouterIP","someDestinationIp", RunningOnLocalMachine, choice, oneWayTextLogWriter);
-					choice = "ServerOneWayTextThread";
+					choice = "ClientOneWayTextThread";
+					break;
+				case "3":
+					test = new ClientMessageSizeTextThread("someRouterIP","someDestinationIp", RunningOnLocalMachine, choice, messageSizeTextLogWriter);
+					choice = "ClientMessageSizeTextThread";
 					break;
 				default:
 					PRINT("Invalid Input");
@@ -69,6 +74,7 @@ public class TCPClient
 		PRINT("Enter \'-1\' to exit");
 		PRINT("1) Two Way Text Stream Test");
 		PRINT("2) One Way Text Stream Test");
+		PRINT("3) Message Size Text Stream Test");
 	}
 
 	private static void PRINT(String message)

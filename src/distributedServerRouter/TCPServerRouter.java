@@ -60,6 +60,10 @@ public class TCPServerRouter
 						t = new ServerRouterTextThread(RoutingTable, clientSocket, ind, routingTableLookupLogWriter);
 						choice = "ServerRouterTextThread";
 						break;
+					case "3":
+						t = new ServerRouterTextThread(RoutingTable, clientSocket, ind, routingTableLookupLogWriter);
+						choice = "ServerRouterTextThread";
+						break;
 					default:
 						ERROR("Test not available");
 						break;

@@ -34,6 +34,10 @@ public class TCPServer
 					test = new ServerOneWayTextThread("someRouterIP", RunningOnLocalMachine, choice);
 					choice = "ServerOneWayTextThread";
 					break;
+				case "3":
+					test = new ServerMessageSizeTextThread("someRouterIP", RunningOnLocalMachine, choice);
+					choice = "ServerMessageSizeTextThread";
+					break;
 				default:
 					PRINT("Invalid Input");
 					//loop starts over instead of continuing
@@ -65,6 +69,7 @@ public class TCPServer
 		PRINT("Enter \'-1\' to exit");
 		PRINT("1) Two Way Text Stream Test");
 		PRINT("2) One Way Text Stream Test");
+		PRINT("3) Message Size Text Stream Test");
 	}
 
 	private static void PRINT(String message)
