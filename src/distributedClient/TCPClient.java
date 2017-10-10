@@ -20,6 +20,7 @@ public class TCPClient
 
 		String logFolderSaveLocation = "src/distributedClient";
 		LogWriter twoWayTextLogWriter = new LogWriter(logFolderSaveLocation, "TwoWayText");
+		LogWriter oneWayTextLogWriter = new LogWriter(logFolderSaveLocation, "OneWayText");
 
 		while (!choice.equals("-1"))
 		{
@@ -32,6 +33,10 @@ public class TCPClient
 				case "1":
 					test = new ClientTwoWayTextThread("someRouterIP","someDestinationIp", RunningOnLocalMachine, choice, twoWayTextLogWriter);
 					choice = "ServerTwoWayTextThread";
+					break;
+				case "2":
+					test = new ClientOneWayTextThread("someRouterIP","someDestinationIp", RunningOnLocalMachine, choice, oneWayTextLogWriter);
+					choice = "ServerOneWayTextThread";
 					break;
 				default:
 					PRINT("Invalid Input");
@@ -62,7 +67,8 @@ public class TCPClient
 		PRINT("What Type of Test Would you like to run?");
 		PRINT("Enter number before test");
 		PRINT("Enter \'-1\' to exit");
-		PRINT("1) Text Stream Test");
+		PRINT("1) Two Way Text Stream Test");
+		PRINT("2) One Way Text Stream Test");
 	}
 
 	private static void PRINT(String message)

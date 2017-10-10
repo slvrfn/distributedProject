@@ -51,7 +51,7 @@ public abstract class BaseClientThread extends Thread
             if (RunningOnLocalMachine)
             {
                 routerName = "127.0.0.1";
-                destinationIpAddress ="127.0.0.1:4321";
+                destinationIpAddress ="127.0.0.1:" + PortToConnectTo();
             }
             Socket = new Socket(routerName, SockNum, InetAddress.getByName(null),PortToRunOn());
             out = new PrintWriter(Socket.getOutputStream(), true);
@@ -107,6 +107,9 @@ public abstract class BaseClientThread extends Thread
 
     //necessary so each test can specify which port it wants to run on
     abstract protected int PortToRunOn();
+
+    //necessary to specify the port the server will run on
+    abstract protected int PortToConnectTo();
 
     public void TerminateThread()
     {

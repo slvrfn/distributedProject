@@ -38,13 +38,14 @@ public class ServerRouterTextThread extends ServerRouterBaseThread
             while (isRunning && (inputLine = in.readLine()) != null)
             {
                 PRINT("Client/Server said: " + inputLine);
-                if (inputLine.equals("Bye.")) // exit statement
-                    break;
+
                 outputLine = inputLine; // passes the input from the machine to the output string for the destination
                 if ( outSocket != null)
                 {
                     outTo.println(outputLine); // writes to the destination
                 }
+                if (inputLine.equals("Bye.")) // exit statement
+                    break;
             }
         }
         catch (IOException e)

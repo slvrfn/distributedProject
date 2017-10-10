@@ -30,6 +30,10 @@ public class TCPServer
 					test = new ServerTwoWayTextThread("someRouterIP", RunningOnLocalMachine, choice);
 					choice = "ServerTwoWayTextThread";
 					break;
+				case "2":
+					test = new ServerOneWayTextThread("someRouterIP", RunningOnLocalMachine, choice);
+					choice = "ServerOneWayTextThread";
+					break;
 				default:
 					PRINT("Invalid Input");
 					//loop starts over instead of continuing
@@ -59,7 +63,8 @@ public class TCPServer
 		PRINT("What Type of Test Would you like to run?");
 		PRINT("Enter number before test");
 		PRINT("Enter \'-1\' to exit");
-		PRINT("1) Text Stream Test");
+		PRINT("1) Two Way Text Stream Test");
+		PRINT("2) One Way Text Stream Test");
 	}
 
 	private static void PRINT(String message)

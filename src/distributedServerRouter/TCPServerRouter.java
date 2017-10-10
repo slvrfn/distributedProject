@@ -49,10 +49,16 @@ public class TCPServerRouter
 				in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 				String testChoice = in.readLine();
 				PRINT("Test choice \'" + testChoice + "\' was received");
+				String choice = "";
 				switch (testChoice)
 				{
 					case "1":
 						t = new ServerRouterTextThread(RoutingTable, clientSocket, ind, routingTableLookupLogWriter);
+						choice = "ServerRouterTextThread";
+						break;
+					case "2":
+						t = new ServerRouterTextThread(RoutingTable, clientSocket, ind, routingTableLookupLogWriter);
+						choice = "ServerRouterTextThread";
 						break;
 					default:
 						ERROR("Test not available");
@@ -60,7 +66,7 @@ public class TCPServerRouter
 				}
 				currentThreads.add(t);
 				t.start(); // starts the thread
-				PRINT("ServerRouter Text test thread started");
+				PRINT(choice + " started");
 
 				ind++; // increments the index
 				PRINT("ServerRouter connected with Client/Server: " + clientSocket.getInetAddress().getHostAddress());
