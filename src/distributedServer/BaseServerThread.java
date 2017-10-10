@@ -40,7 +40,7 @@ public abstract class BaseServerThread extends Thread
 		{
 			if (RunningOnLocalMachine)
 				routerName = "127.0.0.1";
-			socket = new Socket(routerName, SockNum, InetAddress.getByName(null), PortToRunOn());
+			socket = new Socket(routerName, SockNum, null, PortToRunOn());
 		}
 		catch (IOException e)
 		{

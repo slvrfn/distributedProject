@@ -51,9 +51,10 @@ public abstract class BaseClientThread extends Thread
             if (RunningOnLocalMachine)
             {
                 routerName = "127.0.0.1";
-                destinationIpAddress ="127.0.0.1:" + PortToConnectTo();
+                destinationIpAddress ="127.0.0.1";
             }
-            Socket = new Socket(routerName, SockNum, InetAddress.getByName(null),PortToRunOn());
+            destinationIpAddress +=":" + PortToConnectTo();
+            Socket = new Socket(routerName, SockNum, null,PortToRunOn());
             out = new PrintWriter(Socket.getOutputStream(), true);
             in = new BufferedReader(new InputStreamReader(Socket.getInputStream()));
         }
