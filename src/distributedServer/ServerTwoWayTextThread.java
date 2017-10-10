@@ -60,6 +60,7 @@ public class ServerTwoWayTextThread extends BaseServerThread
                     out.println(finishTime);
                     break;
                 }
+                fromServer = fromClient;
                 PRINT("Server said: " + fromServer);
                 out.println(fromServer); // sending the converted message back to the Client via ServerRouter
             }
