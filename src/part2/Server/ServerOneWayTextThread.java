@@ -1,4 +1,4 @@
-package distributedServer;
+package part2.Server;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -7,15 +7,15 @@ import java.io.PrintWriter;
 import java.net.Socket;
 
 //class to run some network test
-public class ServerMessageSizeTextThread extends BaseServerThread
+public class ServerOneWayTextThread extends BaseServerThread
 {
-    public ServerMessageSizeTextThread(String _routerName, boolean onLocalMachine, String choice) {
+    public ServerOneWayTextThread(String _routerName, boolean onLocalMachine, String choice) {
         super(_routerName, onLocalMachine, choice);
     }
 
     @Override
     protected int PortToRunOn() {
-        return 5544;
+        return 7878;
     }
 
     //the test to be performed
@@ -54,10 +54,12 @@ public class ServerMessageSizeTextThread extends BaseServerThread
                 {
                     break;
                 }
-
-                String receiveTime = String.valueOf(System.currentTimeMillis());
-                PRINT("Test finished at: " + receiveTime);
-                out.println(receiveTime);
+                if (fromClient.equals("Finished."))
+                {
+                    String finishTime = String.valueOf(System.currentTimeMillis());
+                    PRINT("Test finished at: " + finishTime);
+                    out.println(finishTime);
+                }
             }
         }
         catch (IOException e)
@@ -80,6 +82,6 @@ public class ServerMessageSizeTextThread extends BaseServerThread
 
     @Override
     protected void PRINT(String message) {
-        super.PRINT("ServerMessageSizeTextThread " + message);
+        super.PRINT("ServerOneWayTextThread " + message);
     }
 }

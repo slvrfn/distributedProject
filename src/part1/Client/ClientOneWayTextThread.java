@@ -1,4 +1,4 @@
-package distributedClient;
+package part1.Client;
 
 import logWriter.LogWriter;
 

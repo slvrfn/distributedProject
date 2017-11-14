@@ -1,4 +1,4 @@
-package distributedClient;
+package part2.Client;
 
 import logWriter.LogWriter;
 
@@ -18,7 +18,7 @@ public class TCPClient
 
 		List<BaseClientThread> currentThreads = new ArrayList<BaseClientThread>();
 
-		String logFolderSaveLocation = "src/distributedClient";
+		String logFolderSaveLocation = "src/part1.Client";
 		LogWriter twoWayTextLogWriter = new LogWriter(logFolderSaveLocation, "TwoWayText");
 		LogWriter oneWayTextLogWriter = new LogWriter(logFolderSaveLocation, "OneWayText");
 		LogWriter messageSizeTextLogWriter = new LogWriter(logFolderSaveLocation, "MessageSizeText");

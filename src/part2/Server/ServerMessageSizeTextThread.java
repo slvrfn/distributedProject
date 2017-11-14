@@ -1,4 +1,4 @@
-package distributedServer;
+package part2.Server;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -7,15 +7,15 @@ import java.io.PrintWriter;
 import java.net.Socket;
 
 //class to run some network test
-public class ServerTwoWayTextThread extends BaseServerThread
+public class ServerMessageSizeTextThread extends BaseServerThread
 {
-    public ServerTwoWayTextThread(String _routerName, boolean onLocalMachine, String choice) {
+    public ServerMessageSizeTextThread(String _routerName, boolean onLocalMachine, String choice) {
         super(_routerName, onLocalMachine, choice);
     }
 
     @Override
     protected int PortToRunOn() {
-        return 4321;
+        return 5544;
     }
 
     //the test to be performed
@@ -46,6 +46,7 @@ public class ServerTwoWayTextThread extends BaseServerThread
         {
             // Communication while loop
             //loop will stop if the thread needs to be closed, or if client has stopped sending things
+            out.println("ready");
             while (isRunning && (fromClient = in.readLine()) != null)
             {
                 PRINT("Client said: " + fromClient);
@@ -53,16 +54,10 @@ public class ServerTwoWayTextThread extends BaseServerThread
                 {
                     break;
                 }
-                if (fromClient.equals("Finished.")) // exit statement
-                {
-                    String finishTime = String.valueOf(System.currentTimeMillis());
-                    PRINT("Test finished at: " + finishTime);
-                    out.println(finishTime);
-                    break;
-                }
-                fromServer = fromClient;
-                PRINT("Server said: " + fromServer);
-                out.println(fromServer); // sending the converted message back to the Client via ServerRouter
+
+                String receiveTime = String.valueOf(System.currentTimeMillis());
+                PRINT("Test finished at: " + receiveTime);
+                out.println(receiveTime);
             }
         }
         catch (IOException e)
@@ -85,6 +80,6 @@ public class ServerTwoWayTextThread extends BaseServerThread
 
     @Override
     protected void PRINT(String message) {
-        super.PRINT("ServerTwoWayTextThread " + message);
+        super.PRINT("ServerMessageSizeTextThread " + message);
     }
 }

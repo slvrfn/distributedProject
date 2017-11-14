@@ -1,10 +1,9 @@
-package distributedServerRouter;
+package part1.ServerRouter;
 
 import logWriter.LogWriter;
 
 import java.io.*;
 import java.net.*;
-import java.lang.Exception;
 
 //Generic base test thread. This is used to perform the basic message wiring
 //while derived classes perform the actual tests

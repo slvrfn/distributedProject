@@ -1,4 +1,4 @@
-package distributedServerRouter;
+package part2.ServerRouter;
 
 import logWriter.LogWriter;
 

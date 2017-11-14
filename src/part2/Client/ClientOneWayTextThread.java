@@ -1,4 +1,4 @@
-package distributedClient;
+package part2.Client;
 
 import logWriter.LogWriter;
 
@@ -6,11 +6,11 @@ import java.io.*;
 import java.net.Socket;
 
 //class to run some network test
-public class ClientTwoWayTextThread extends BaseClientThread
+public class ClientOneWayTextThread extends BaseClientThread
 {
     LogWriter twoWayTextLogWriter;
 
-    public ClientTwoWayTextThread(String _routerName, String destinationIp, boolean onLocalMachine, String choice, LogWriter writer) throws IOException {
+    public ClientOneWayTextThread(String _routerName, String destinationIp, boolean onLocalMachine, String choice, LogWriter writer) throws IOException {
         super(_routerName, destinationIp, onLocalMachine, choice);
         twoWayTextLogWriter = writer;
     }
@@ -18,13 +18,13 @@ public class ClientTwoWayTextThread extends BaseClientThread
     @Override
     protected int PortToRunOn()
     {
-        return 1234;
+        return 8787;
     }
 
     @Override
     protected int PortToConnectTo()
     {
-        return 4321;
+        return 7878;
     }
 
     //the test to be performed
@@ -64,33 +64,36 @@ public class ClientTwoWayTextThread extends BaseClientThread
 
         try
         {
-            startTime = System.currentTimeMillis();
-            String timeFinished = "-1";
-            boolean saveTime = false;
-            // Communication while loop
-            while (isRunning && (fromServer = in.readLine()) != null)
-            {
-                PRINT("Server: " + fromServer);
-                if (saveTime)
-                    timeFinished = fromServer;
-                if (fromServer.equals("Bye.")) // exit statement
-                    break;
 
-                fromUser = fromFile.readLine(); // reading strings from a file
-                if (fromUser != null)
-                {
-                    PRINT("Client: " + fromUser);
-                    out.println(fromUser); // sending the strings to the Server via ServerRouter
-                }
+            String timeFinished = "-1";
+
+            fromServer = in.readLine();
+            PRINT("from server: " + fromServer);
+            // Communication while loop
+            startTime = System.currentTimeMillis();
+            while (isRunning && (fromUser = fromFile.readLine()) != null)
+            {
+                PRINT("Client: " + fromUser);
+                out.println(fromUser); // sending the strings to the Server via ServerRouter
+
                 if (fromUser.equals("Finished."))
-                    saveTime = true;
-                else
-                    saveTime = false;
+                    break;
             }
+            //read time in from server that the transmission completed
+            timeFinished = in.readLine();
             PRINT("Time received: " + timeFinished);
             long diff = Long.parseLong(timeFinished)-startTime;
-            String output = String.format("Two Way text Transmission occurred in %s milliseconds", diff);
+            String output = String.format("One Way text Transmission occurred in %s milliseconds", diff);
             twoWayTextLogWriter.WriteToFile(output);
+
+            //read in closing statement from file
+            fromUser = fromFile.readLine();
+            PRINT("Client: " + fromUser);
+            //send closing statement
+            out.println(fromUser);
+            //receive last message from server
+            fromServer = in.readLine();
+            PRINT("Server said: " + fromServer);
         }
         catch (IOException e)
         {

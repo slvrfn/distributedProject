@@ -1,4 +1,4 @@
-package distributedClient;
+package part1.Client;
 
 import java.io.*;
 import java.net.InetAddress;
