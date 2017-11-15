@@ -14,18 +14,17 @@ import java.util.concurrent.ConcurrentHashMap;
 public abstract class UDPBaseThread extends Thread
 {
 	protected ConcurrentHashMap<String,String> lookupTable; // routing table
-
-	protected List<Thread> createdThreads;
+	protected ConcurrentHashMap<String,String> serverRouters;
 
 	LogWriter logWriter;
 	protected volatile Boolean isRunning = true;
 
 	// Constructor
-	UDPBaseThread(ConcurrentHashMap map, LogWriter writer)
+	UDPBaseThread(ConcurrentHashMap<String,String> routers, ConcurrentHashMap map, LogWriter writer)
 	{
 		logWriter = writer;
 		lookupTable = map;
-		createdThreads = new ArrayList<Thread>();
+		serverRouters = routers;
 	}
 	
 	// Run method (will run for each machine that connects to the ServerRouter)
@@ -50,7 +49,7 @@ public abstract class UDPBaseThread extends Thread
 			while (isRunning) {
 				sk.receive(dgp);
 
-				PerformAction(dgp);
+				PerformAction(sk, dgp);
 			}
 		}
 		catch (IOException e)
@@ -65,7 +64,7 @@ public abstract class UDPBaseThread extends Thread
 
 	//the action to be performed
 	//you are provided a DatagramPacket, you can perform whatever actions with it
-	abstract protected void PerformAction(DatagramPacket p);
+	abstract protected void PerformAction(DatagramSocket s, DatagramPacket p);
 
 	//gets the port this udp request is supposed to occur on
 	abstract protected int GetPort();
@@ -87,9 +86,5 @@ public abstract class UDPBaseThread extends Thread
 	protected void PRINT(String message)
 	{
 		System.out.println(message);
-	}
-
-	protected void RegisterThread(Thread t){
-		createdThreads.add(t);
 	}
 }

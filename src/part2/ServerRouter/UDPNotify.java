@@ -3,34 +3,49 @@ package part2.ServerRouter;
 import logWriter.LogWriter;
 
 import java.net.DatagramPacket;
+import java.net.DatagramSocket;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class UDPNotify extends UDPBaseThread {
 
-    public UDPNotify(ConcurrentHashMap map, LogWriter writer) {
-        super(map, writer);
+    public UDPNotify(ConcurrentHashMap<String,String> SRs, ConcurrentHashMap map, LogWriter writer) {
+        super(SRs, map, writer);
     }
 
     @Override
-    protected void PerformAction(DatagramPacket p) {
+    protected void PerformAction(DatagramSocket s, DatagramPacket p) {
         String received = new String(p.getData(), 0, p.getLength());
 
-        int separatorIndex = received.indexOf(":");
-        if (separatorIndex == -1)
+        String[] parts = received.split(":");
+        if (parts.length !=3)
             ERROR("Improperly Formatted Request");
 
-        String symbolicName = received.substring(0,separatorIndex);
-        String code = received.substring(separatorIndex+1);
+        String symbolicName = parts[0];
+        String code = parts[1];
+        String type = parts[2];
+        String addr = String.valueOf(p.getAddress());
 
+        if (type.equals("P"))
+        {
+            ModifyHashMap(lookupTable, symbolicName, code, addr);
+        }
+        else if (type.equals("SR")){
+            ModifyHashMap(serverRouters, symbolicName, code, addr);
+        }
+        else {
+            ERROR("Improperly formatted notify type");
+        }
+    }
+
+    private void ModifyHashMap(ConcurrentHashMap<String,String> map, String symbolic, String code, String addr){
         if (code.equals("Join"))
         {
-            String addr = String.valueOf(p.getAddress());
-            lookupTable.put(symbolicName, addr);
-            PRINT(symbolicName + ":" + addr + " was added to the lookup table");
+            map.put(symbolic, addr);
+            PRINT(symbolic + ":" + addr + " was added to the lookup table");
         }
         else if (code.equals("Leave")){
-            lookupTable.remove(symbolicName);
-            PRINT(symbolicName + " was removed from the lookup table");
+            map.remove(symbolic);
+            PRINT(symbolic + " was removed from the lookup table");
         }
         else {
             ERROR("Improperly formatted notify code");
