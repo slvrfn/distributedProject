@@ -34,9 +34,11 @@ public class UDPRequest extends UDPBaseThread {
         String SymbolicName = null;
         DatagramPacket packet;
         DatagramSocket sock;
+        String returnAddress;
 
         public LookupThread(DatagramSocket s, DatagramPacket p, ConcurrentHashMap<String, String> m) {
             packet = p;
+            returnAddress = packet.getAddress().toString().substring(1);
             _lookupTable = m;
             String received = new String(p.getData(), 0, p.getLength());
             SymbolicName = received;
@@ -138,9 +140,7 @@ public class UDPRequest extends UDPBaseThread {
             byte[] response = m.getBytes();
             DatagramPacket out = null;
             try {
-                InetAddress a = packet.getAddress();
-                String addr = String.valueOf(a).substring(1);
-                out = new DatagramPacket(response, response.length, InetAddress.getByName(addr) , 1234);
+                out = new DatagramPacket(response, response.length, InetAddress.getByName(returnAddress) , 1234);
             } catch (UnknownHostException e) {
                 e.printStackTrace();
             }

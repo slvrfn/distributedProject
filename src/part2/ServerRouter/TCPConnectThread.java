@@ -33,7 +33,7 @@ public class TCPConnectThread extends Thread
 	public void run()
 	{
 		Socket clientSocket = null; // socket for the thread
-		int SockNum = 5555; // port number
+		int SockNum = 33333; // port number
 
 
 		String logFolderSaveLocation = "src/part1.ServerRouter";
