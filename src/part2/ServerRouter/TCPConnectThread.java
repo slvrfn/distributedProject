@@ -10,7 +10,7 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TCPServerRouter 
+public class TCPConnectThread
 {
 	public static void main(String[] args)
 	{
