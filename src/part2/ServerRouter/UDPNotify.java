@@ -23,7 +23,7 @@ public class UDPNotify extends UDPBaseThread {
         String symbolicName = parts[0];
         String code = parts[1];
         String type = parts[2];
-        String addr = String.valueOf(p.getAddress());
+        String addr = String.valueOf(p.getAddress()).substring(1);
 
         if (type.equals("P"))
         {

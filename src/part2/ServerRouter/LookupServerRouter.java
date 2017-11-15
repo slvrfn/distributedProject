@@ -31,7 +31,7 @@ public class LookupServerRouter
 		//start connect thread
 		LogWriter connectLogWriter = new LogWriter(logFolderSaveLocation, "connectLogWriter");
 		TCPConnectThread connectListener = new TCPConnectThread(lookupTable, connectLogWriter);
-		notifyListener.start();
+		connectListener.start();
 
 		DatagramSocket sock = null;
 		try {
@@ -42,7 +42,7 @@ public class LookupServerRouter
 
 		//add other server routers of interest ot this list
 		ArrayList<String> otherServerRouters = new ArrayList<String>();
-		otherServerRouters.add("");
+		//otherServerRouters.add("");
 		String name = "SR1";
 		//need to notify other server routers about this routers existence
 		NotifyServerRouters(name,"Join", sock, otherServerRouters);

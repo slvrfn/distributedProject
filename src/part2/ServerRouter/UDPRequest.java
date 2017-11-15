@@ -136,7 +136,14 @@ public class UDPRequest extends UDPBaseThread {
 
         private void RespondToRequester(String m){
             byte[] response = m.getBytes();
-            DatagramPacket out = new DatagramPacket(response, response.length, packet.getAddress(), 1234);
+            DatagramPacket out = null;
+            try {
+                InetAddress a = packet.getAddress();
+                String addr = String.valueOf(a).substring(1);
+                out = new DatagramPacket(response, response.length, InetAddress.getByName(addr) , 1234);
+            } catch (UnknownHostException e) {
+                e.printStackTrace();
+            }
             try {
                 sock.send(out);
             }
