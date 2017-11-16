@@ -43,6 +43,7 @@ public class LookupServerRouter
 
 		//add other server routers of interest ot this list
 		ArrayList<String> otherServerRouters = new ArrayList<String>();
+		//ADD OTHER SERVER ROUTERS HERE
 		//otherServerRouters.add("");
 		//need to notify other server routers about this routers existence
 		NotifyServerRouters(serverName,"Join", sock, otherServerRouters);
