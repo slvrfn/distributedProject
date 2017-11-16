@@ -35,18 +35,26 @@ public class UDPNotify extends UDPBaseThread {
             ModifyHashMap(lookupTable, symbolicName, code, addr);
         }
         else if (type.equals("SR")){
-            ModifyHashMap(serverRouters, symbolicName, code, addr);
-            //notify the server that sent the message of this SR's presence
-            NotifyServerRouter(serverName, "Join", s, addr);
+            if (ModifyHashMap(serverRouters, symbolicName, code, addr)){
+                //notify the server that sent the message of this SR's presence
+                //only if the SR was a new addition to the table
+                NotifyServerRouter(serverName, "Join", s, addr);
+            }
+
         }
         else {
             ERROR("Improperly formatted notify type");
         }
     }
 
-    private void ModifyHashMap(ConcurrentHashMap<String,String> map, String symbolic, String code, String addr){
+    //returns bool of whether the address was a new addition to the hashmap
+    private boolean ModifyHashMap(ConcurrentHashMap<String,String> map, String symbolic, String code, String addr){
+        boolean newAddition = false;
         if (code.equals("Join"))
         {
+            if (!map.containsKey(symbolic))
+                newAddition = true;
+
             map.put(symbolic, addr);
             PRINT(symbolic + ":" + addr + " was added to the lookup table");
         }
@@ -57,6 +65,7 @@ public class UDPNotify extends UDPBaseThread {
         else {
             ERROR("Improperly formatted notify code");
         }
+        return newAddition;
     }
 
     @Override

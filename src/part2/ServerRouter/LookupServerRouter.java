@@ -26,7 +26,7 @@ public class LookupServerRouter
 
 		//start notify thread
 		LogWriter notifyLogWriter = new LogWriter(logFolderSaveLocation, "notifyLogWriter");
-		UDPNotify notifyListener = new UDPNotify(serverRouterTable, lookupTable, notifyLogWriter);
+		UDPNotify notifyListener = new UDPNotify(serverRouterTable, lookupTable, serverName, notifyLogWriter);
 		notifyListener.start();
 
 		//start connect thread
