@@ -2,14 +2,19 @@ package part2.ServerRouter;
 
 import logWriter.LogWriter;
 
+import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
+import java.net.InetAddress;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class UDPNotify extends UDPBaseThread {
 
-    public UDPNotify(ConcurrentHashMap<String,String> SRs, ConcurrentHashMap map, LogWriter writer) {
+    private String serverName;
+
+    public UDPNotify(ConcurrentHashMap<String,String> SRs, ConcurrentHashMap map, String sName, LogWriter writer) {
         super(SRs, map, writer);
+        serverName = sName;
     }
 
     @Override
@@ -31,6 +36,8 @@ public class UDPNotify extends UDPBaseThread {
         }
         else if (type.equals("SR")){
             ModifyHashMap(serverRouters, symbolicName, code, addr);
+            //notify the server that sent the message of this SR's presence
+            NotifyServerRouter(serverName, "Join", s, addr);
         }
         else {
             ERROR("Improperly formatted notify type");
@@ -55,5 +62,17 @@ public class UDPNotify extends UDPBaseThread {
     @Override
     protected int GetPort() {
         return 22222;
+    }
+
+    private void NotifyServerRouter(String name, String action, DatagramSocket sock, String addr){
+        String message = name+ ":" + action + ":SR";
+        byte[] response = message.getBytes();
+        try {
+            DatagramPacket out = new DatagramPacket(response, response.length, InetAddress.getByName(addr), 22222);
+            sock.send(out);
+        }
+        catch (IOException e){
+            ERROR("Error sending response");
+        }
     }
 }

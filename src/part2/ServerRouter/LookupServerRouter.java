@@ -14,6 +14,7 @@ public class LookupServerRouter
 	public static void main(String[] args)
 	{
 		String logFolderSaveLocation = "src/part2.ServerRouter";
+		String serverName = "SR1";
 
 		ConcurrentHashMap<String,String> lookupTable = new ConcurrentHashMap<>();
 		ConcurrentHashMap<String,String> serverRouterTable = new ConcurrentHashMap<>();
@@ -43,9 +44,8 @@ public class LookupServerRouter
 		//add other server routers of interest ot this list
 		ArrayList<String> otherServerRouters = new ArrayList<String>();
 		//otherServerRouters.add("");
-		String name = "SR1";
 		//need to notify other server routers about this routers existence
-		NotifyServerRouters(name,"Join", sock, otherServerRouters);
+		NotifyServerRouters(serverName,"Join", sock, otherServerRouters);
 
 		//user enter if they want the server router to stop
 
@@ -58,7 +58,7 @@ public class LookupServerRouter
 			PRINT("Please enter '-1' to stop the server router\"");
 		}
 
-		NotifyServerRouters(name,"Leave", sock, otherServerRouters);
+		NotifyServerRouters(serverName,"Leave", sock, otherServerRouters);
 
 		//clean up socket
 		if (sock != null)
