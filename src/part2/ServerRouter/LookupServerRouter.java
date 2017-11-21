@@ -20,17 +20,17 @@ public class LookupServerRouter
 		ConcurrentHashMap<String,String> serverRouterTable = new ConcurrentHashMap<>();
 
 		//start request thread
-		LogWriter requestLogWriter = new LogWriter(logFolderSaveLocation, "requestLogWriter");
+		LogWriter requestLogWriter = new LogWriter(logFolderSaveLocation, serverName, "requestLogWriter");
 		UDPRequest requestListener = new UDPRequest(serverRouterTable, lookupTable, requestLogWriter);
 		requestListener.start();
 
 		//start notify thread
-		LogWriter notifyLogWriter = new LogWriter(logFolderSaveLocation, "notifyLogWriter");
+		LogWriter notifyLogWriter = new LogWriter(logFolderSaveLocation, serverName, "notifyLogWriter");
 		UDPNotify notifyListener = new UDPNotify(serverRouterTable, lookupTable, serverName, notifyLogWriter);
 		notifyListener.start();
 
 		//start connect thread
-		LogWriter connectLogWriter = new LogWriter(logFolderSaveLocation, "connectLogWriter");
+		LogWriter connectLogWriter = new LogWriter(logFolderSaveLocation, serverName, "connectLogWriter");
 		TCPConnectThread connectListener = new TCPConnectThread(lookupTable, connectLogWriter);
 		connectListener.start();
 

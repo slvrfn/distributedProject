@@ -34,10 +34,6 @@ public class TCPConnectThread extends Thread
 	{
 		Socket clientSocket = null; // socket for the thread
 		int SockNum = 33333; // port number
-
-
-		String logFolderSaveLocation = "src/part1.ServerRouter";
-		LogWriter routingTableLookupLogWriter = new LogWriter(logFolderSaveLocation, "RoutingTableLookup");
 		
 
 		try

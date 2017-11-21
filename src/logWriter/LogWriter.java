@@ -9,10 +9,10 @@ public class LogWriter
 {
     File saveDirectory;
 
-    public LogWriter(String folderLocation, String testType)
+    public LogWriter(String folderLocation, String peerName, String test)
     {
         //each test will save its output in a different folder based on the test start time
-        String folderName = testType + " test from "+String.valueOf(System.currentTimeMillis());
+        String folderName = peerName + "-" + test + "-" + String.valueOf(System.currentTimeMillis());
         folderLocation += "/" + folderName;
         saveDirectory = new File(folderLocation);
     }

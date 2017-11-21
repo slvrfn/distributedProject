@@ -22,7 +22,7 @@ public class TCPServerRouter
 		int ind = 0; // index in the routing table
 
 		String logFolderSaveLocation = "src/part1.ServerRouter";
-		LogWriter routingTableLookupLogWriter = new LogWriter(logFolderSaveLocation, "RoutingTableLookup");
+		LogWriter routingTableLookupLogWriter = new LogWriter(logFolderSaveLocation,"SR", "RoutingTableLookup");
 		
 		//Accepting connections
 		ServerSocket serverSocket = null; // server socket for accepting connections
